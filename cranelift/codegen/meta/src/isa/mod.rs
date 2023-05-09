@@ -6,6 +6,7 @@ use std::fmt;
 mod arm64;
 mod riscv64;
 mod s390x;
+mod ppc64;
 pub(crate) mod x86;
 
 /// Represents known ISA target.
@@ -15,6 +16,7 @@ pub enum Isa {
     Arm64,
     S390x,
     Riscv64,
+    Ppc64,
 }
 
 impl Isa {
@@ -33,6 +35,7 @@ impl Isa {
             "s390x" => Some(Isa::S390x),
             x if ["x86_64", "i386", "i586", "i686"].contains(&x) => Some(Isa::X86),
             "riscv64" | "riscv64gc" | "riscv64imac" => Some(Isa::Riscv64),
+            "powerpc64le" | "powerpc64" => Some(Isa::Ppc64),
             _ => None,
         }
     }
@@ -51,6 +54,7 @@ impl fmt::Display for Isa {
             Isa::Arm64 => write!(f, "arm64"),
             Isa::S390x => write!(f, "s390x"),
             Isa::Riscv64 => write!(f, "riscv64"),
+            Isa::Ppc64 => write!(f, "ppc64"),
         }
     }
 }
@@ -62,6 +66,7 @@ pub(crate) fn define(isas: &[Isa], shared_defs: &mut SharedDefinitions) -> Vec<T
             Isa::Arm64 => arm64::define(shared_defs),
             Isa::S390x => s390x::define(shared_defs),
             Isa::Riscv64 => riscv64::define(shared_defs),
+            Isa::Ppc64 => ppc64::define(shared_defs),
         })
         .collect()
 }
